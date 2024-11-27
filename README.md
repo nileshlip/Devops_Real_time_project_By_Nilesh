@@ -10,7 +10,7 @@
 - First we need to launch an EC2 instance with Keypair
 ```sh
 instanceType: t2.micro
-AMI: Amazon Linux-2
+AMI: ubuntu
 Security Group: 
 22, SSH
 8080, Custom TCP
@@ -19,10 +19,19 @@ Security Group:
 - Next we need to install `Java`,`Jenkins`, `Maven` to our server.
 - First switch to root user `sudo su -` and update the packages first `sudo yum update -y`
 ```shell
-sudo wget -O /etc/yum.repos.d/jenkins.repo \
-    https://pkg.jenkins.io/redhat-stable/jenkins.repo
-sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
-sudo yum upgrade
+sudo apt update
+sudo apt install fontconfig openjdk-17-jre -y
+java -version
+openjdk version "17.0.8" 2023-07-18
+OpenJDK Runtime Environment (build 17.0.8+7-Debian-1deb12u1)
+OpenJDK 64-Bit Server VM (build 17.0.8+7-Debian-1deb12u1, mixed mode, sharing)
+sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
+  https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]" \
+  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
+sudo apt-get update
+sudo apt-get install jenkins -y
 ```
 - Then we need to install Java
 ```sh
@@ -75,7 +84,7 @@ mv apache-maven-3.9.6 maven
 ```sh
 M2_HOME=/opt/maven
 M2=/opt/maven/bin
-JAVA_HOME=/usr/lib/jvm/java-17-openjdk-17.0.12.0.7-2.el9.x86_64
+JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 PATH=$PATH:$HOME/bin:$M2_HOME:$M2:$JAVA_HOME
 export PATH
 ```
