@@ -5,7 +5,7 @@
     <title>Online LMS</title>
 </head>
 <body>
-    <h1>11Our  Project Are Successfully Deployed -Denishhhhhhhhhh</h1>
+    <h1>w11Our  Project Are Successfully Deployed -Denishhhhhhhhhh</h1>
     <a href="login.jsp">Login</a> | <a href="register.jsp">Register</a>
 </body>
 </html>
