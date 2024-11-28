@@ -67,7 +67,7 @@ tar -xvf apache-maven-3.9.9-bin.tar.gz
  mv apache-maven-3.9.9 maven
 ```
 
-- Next configure `M2_HOME` and `M2`(binary directory) environment variables and add them to the `PATH` so that we can run `maven` commands in any directory. You can search where is your JVM by using `find / -name jvm`
+- Next configure `M2_HOME` and `M2`(binary directory) environment variables and add them to the `PATH` so that we can run `maven` commands in any directory. You can search where is your JVM by using `find / -name java`
 
 - Now you need to edit `nano /home/ubuntu/.profile` to add these variables to path and save 
 ```sh
