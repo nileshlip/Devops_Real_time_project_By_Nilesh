@@ -68,16 +68,16 @@ tar -xvf apache-maven-3.9.9-bin.tar.gz
  mv apache-maven-3.9.9 maven
 ```
 
-- Next configure `M2_HOME` and `M2`(binary directory) environment variables and add them to the `PATH` so that we can run `maven` commands in any directory. You can search where is your JVM by using t`find / -name java-11*`
+- Next configure `M2_HOME` and `M2`(binary directory) environment variables and add them to the `PATH` so that we can run `maven` commands in any directory. You can search where is your JVM by using `find / -name jvm`
 
-- Now you need to edit nano /home/ubuntu/.profile to add these variables to path and save 
+- Now you need to edit `nano /home/ubuntu/.profile` to add these variables to path and save 
 ```sh
 export JAVA_HOME=/usr/lib/jvm/default-java
 export M2_HOME=/opt/maven
 export MAVEN_HOME=/opt/maven
 export PATH=${M2_HOME}/bin:${PATH}
 ```
-- To apply the changes we have made to .bash_profile, either we can logout and log back in or run `source .bash_profile` command. It will upload the changes.
+- To apply the changes we have made to .profile, either we can logout and log back in or run `source .profile` command. It will upload the changes.
 
 ### Step4: Integrate Maven with Jenkins
 
