@@ -70,13 +70,12 @@ tar -xvf apache-maven-3.9.9-bin.tar.gz
 
 - Next configure `M2_HOME` and `M2`(binary directory) environment variables and add them to the `PATH` so that we can run `maven` commands in any directory. You can search where is your JVM by using t`find / -name java-11*`
 
-- Now you need to edit .bash_profile to add these variables to path and save 
+- Now you need to edit nano /home/ubuntu/.profile to add these variables to path and save 
 ```sh
-M2_HOME=/opt/maven
-M2=/opt/maven/bin
-JAVA_HOME=/usr/lib/jvm/java-17-openjdk-17.0.12.0.7-2.el9.x86_64
-PATH=$PATH:$HOME/bin:$M2_HOME:$M2:$JAVA_HOME
-export PATH
+export JAVA_HOME=/usr/lib/jvm/default-java
+export M2_HOME=/opt/maven
+export MAVEN_HOME=/opt/maven
+export PATH=${M2_HOME}/bin:${PATH}
 ```
 - To apply the changes we have made to .bash_profile, either we can logout and log back in or run `source .bash_profile` command. It will upload the changes.
 
