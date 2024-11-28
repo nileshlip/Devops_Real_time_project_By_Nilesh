@@ -103,35 +103,31 @@ Save -> Build Now
 - First create an EC2 instance for Tomcat Server
 ```sh
 instanceType: t2.micro
-AMI: Amazon Linux-2
+AMI: Ubuntu
 Security Group: 
 22, SSH
 8080, Custom TCP
 ```
 
-- Next install java-11 in Tomcat server, switch to root user `sudo su -` and run below command. Once installed, check `java -version`
+- Next install java-17 in Tomcat server, switch to root user `sudo su -` and run below command. Once installed, check `java -version`
 
 ```sh
-amazon-linux-extras install java-openjdk11
+sudo apt update
+sudo apt upgrade -y
+sudo apt install fontconfig openjdk-17-jre -y
+java -version
 ```
 
 - Next we will install Tomcat, switch to `/opt` directory 
 
 ```sh
 cd /opt
-wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.28/bin/apache-tomcat-10.1.28.tar.gz
-tar -zxvf apache-tomcat-10.1.28.tar.gz
- mv apache-tomcat-10.1.28 tomcat
+wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.33/bin/apache-tomcat-10.1.33.tar.gz
+tar -xvf apache-tomcat-10.1.33.tar.gz
+mv apache-tomcat-10.1.33 tomcat
+sudo rm -r apache-tomcat-10.1.33.tar.gz
 ```
 - Now we can start our Tomcat server
-
-```sh
-cd tomcat/bin/
-./startup.sh
-```
-- Now we should be able to access our Tomcat server from browser. Go to `http:<public_ip_of_your_tomcat_server>:8080`
-
-- When we click `Manager App` we should get `403 Access Denied` error. To fix this issue we need to edit `context.xml` file.
 
 ```sh
 By default the Manager is only accessible from a browser running on the same machine as Tomcat. If you wish to modify this restriction, you'll need to edit the Manager's context.xml file.
@@ -140,9 +136,9 @@ By default the Manager is only accessible from a browser running on the same mac
 - Go to tomcat directory run `find / -name context.xml` to get the location of `context.xml` file
 
 ```sh
-/opt/tomcat/webapps/examples/META-INF/context.xml
-/opt/tomcat/webapps/host-manager/META-INF/context.xml
-/opt/tomcat/webapps/manager/META-INF/context.xml
+nano /opt/tomcat/webapps/examples/META-INF/context.xml
+nano /opt/tomcat/webapps/host-manager/META-INF/context.xml
+nano /opt/tomcat/webapps/manager/META-INF/context.xml
 ```
 
 - We should update `context.xml` file under `host-manager` and `manager` directories. Currently it is only allowing access from localhost, we will comment out the part shown below in the xml.
@@ -186,7 +182,7 @@ cd tomcat/bin/
 
 ### Step2: Integrate Tomcat with Jenkins
 
-- Install `Deploy to Container` plugin in Jenkins. Go to `Manage Jenkins` -> `Manage Plugins`, find the plugin under Available and choose `install without restart`
+- Install `Deploy to Container` plugin in Jenkins. Go to `Manage Jenkins` -> `Plugins`, find the plugin under Available and choose `install without restart`
 
 - Configure Tomcat Server with credentials. Go to `Manage Jenkins` -> `Manage Credentials`. We will select `Add credentials`. We will use the credential we have added to `tomcat-user.xml` file for this step. Since these credentials will be used for deploying app, we will add `deployer` credentials which has `manager-script` role.
 ```sh
@@ -217,6 +213,8 @@ Tomcat URL: http://<Public_IP_of_Tomcat_server>:8080/
 - We can also configure a webhook in our repository, whenever there is any `Git push` happens, job will trigger. To be able to setup Webhooks in Github, Go to `Settings` -> `Webhook` -> `Add webhook` 
 ```sh
 Payload URL: http://<dns_of_your_jenkins_server>:8080/github-webhook/
+type Application/Json
+save
 ``` 
 
 ## Integrating Docker in CI/CD Pipeline
@@ -226,7 +224,7 @@ Payload URL: http://<dns_of_your_jenkins_server>:8080/github-webhook/
 - First we will create an EC2 instance for Docker and name it as `Docker-Host`. 
 ```sh
 instanceType: t2.micro
-AMI: Amazon Linux-2
+AMI: ubuntu
 Security Group: 
 22, SSH
 8080, Custom TCP
@@ -234,8 +232,10 @@ Security Group:
 
 - Login to `Docker-Host` server via SSH,  switch to root user `sudo su -` and install docker
 ```sh
-yum install docker -y
-systemctl start docker
+
+sudo apt update
+sudo apt install docker.io -y
+sudo systemctl start docker
 ```
 
 ### Step2: Create Tomcat container
@@ -315,7 +315,7 @@ cat /etc/group
 - Next we will allow username/password authentication to login to our EC2 instance. By default, EC2s are only allowing connection with Keypair via SSH not username/password.
 
 ```sh
-vim /etc/ssh/sshd_config
+sudo nano /etc/ssh/sshd_config
 ```
 
 - We need to uncomment/comment below lines in `sshd_config` file and save it
@@ -325,7 +325,7 @@ PasswordAuthentication yes
 ```
 - We need to restart sshd service
 ```sh
-service sshd reload
+sudo service ssh reload
 ```
 
 - Go to Jenkins , install `Publish over SSH` plugin. next go to `Manage Jenkins` -> `Configure System`
@@ -358,7 +358,8 @@ Remote directory://opt//docker                  (/home/dockeradmin)
 - Currently artifacts created through Jenkins are sent to `/home/dockeradmin`. We would like to change it to home directory of root user, and give ownership of this new directory to `dockeradmin`
 
 ```sh
-sudo su - 
+sudo su -
+
 cd /opt
 mkdir docker
 chown -R dockeradmin:dockeradmin docker
@@ -402,13 +403,14 @@ docker run -d --name registerapp -p 8089:8080 regapp:v1
 - First we will create an EC2 instance for Ansible.
 ```sh
 instanceType: t2.micro
-AMI: Amazon Linux-2
+AMI: ubuntu 
 Security Group: DevOps-Security-Group
 ```
 
 - Login Ansible server via SSH and create new user named `ansadmin` and add it to `sudoers`
 ```sh
-sudo su - 
+sudo su -
+
 useradd ansadmin
 passwd ansadmin
 ```
@@ -422,17 +424,19 @@ ansadmin ALL=(ALL)       NOPASSWD: ALL
 - Next we will allow username/password authentication to login to our EC2 instance. By default, EC2s are only allowing connection using KeyPair via SSH not username/password.
 
 ```sh
-nano /etc/ssh/sshd_config
+sudo nano /etc/ssh/sshd_config
 ```
 
 - We need to uncomment/comment below lines in `sshd_config` file and save it
 ```sh
+PermitRootLogin prohibit-password
+KbdInteractiveAuthentication yes
 PasswordAuthentication yes
 #PasswordAuthentication no
 ```
 - We need to restart sshd service
 ```sh
-sudo service sshd reload
+sudo service ssh reload
 ```
 
 - Next we need to switch to `ansadmin` user and create ssh key. Create key will be stored in `/home/ansadmin/.ssh` directory. `id_rsa` will be our private key, `id_rsa.pub` will be our public key.
@@ -442,7 +446,11 @@ ssh-keygen
 
 - Now we can install ansible as root user.
 ```shell
-amazon-linux-extras install ansible2
+sudo apt-get update
+sudo apt-get install software-properties-common -y
+sudo add-apt-repository --yes --update ppa:ansible/ansible
+sudo apt-get install ansible -y
+systemctl start ssh
 ``` 
 
 - Ansible requires pyhon to be able to run, but Amazon Linux-2 already has python installed for this reason, we don't need to install python
@@ -460,6 +468,7 @@ On Docker Host:
 ```
 ```sh
 sudo su -
+
 useradd ansadmin
 passwd ansadmin
 visudo
@@ -472,12 +481,14 @@ ansadmin ALL=(ALL)       NOPASSWD: ALL
 ```
 - We need to uncomment/comment below lines in `sshd_config` file and save it
 ```sh
+PermitRootLogin prohibit-password
+KbdInteractiveAuthentication yes
 PasswordAuthentication yes
 #PasswordAuthentication no
 ```
 - We need to restart sshd service
 ```sh
-sudo service sshd reload
+sudo service ssh reload
 ```
 
 ```Yaml
@@ -493,7 +504,7 @@ On Ansible Node:
 ```sh
 sudo su - ansadmin
 ssh-keygen
-ssh-copy-id <private-ip-of-docker-host>
+ssh-copy-id ansadmin@<private-ip-of-docker-host>
 ```
 
 - We can check connection by running below command in ansible server.
@@ -508,16 +519,17 @@ Name: ansible-server
 Hostname: Private-ip-of-Ansible-server
 username: ansadmin
 Enable user authentication
-password
+Click On Advanced
+password : ansadmin
 ```
 
 - Now we can create our Jenkins job:
 ```sh
 Install Plugin - copy artifact
 Job Name: CopyArtifactsOntoAnsible
-Job Trigger -Build after other projects are built-Select Last Job(BuildAndDeployOnContainer,)
+Job Trigger - Build after other projects are built-Select Last Job(BuildAndDeployOnContainer,)
 buid step: choose Copy artifacts from another project
-project  nbame -BuildAndDeployOnContainer (last job name)
+project  name -BuildAndDeployOnContainer (last job name)
 Artifacts to copy - **/*.war
 choose - Fingerprint Artifacts
  
