@@ -446,11 +446,10 @@ ssh-keygen
 
 - Now we can install ansible as root user.
 ```shell
-sudo apt-get update
-sudo apt-get install software-properties-common -y
+sudo apt update
+sudo apt install software-properties-common -y
 sudo add-apt-repository --yes --update ppa:ansible/ansible
-sudo apt-get install ansible -y
-systemctl start ssh
+sudo apt install ansible -y
 ``` 
 
 - Ansible requires pyhon to be able to run, but Amazon Linux-2 already has python installed for this reason, we don't need to install python
