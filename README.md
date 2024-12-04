@@ -552,7 +552,7 @@ sudo chown -R ansadmin:ansadmin docker
 
 - First we need to install docker in ansible server.And add `ansadmin` user to docker group, start docker service.
 ```sh
-sudo yum install docker -y
+sudo apt install docker.io -y
 sudo usermod -aG docker ansadmin
 sudo systemctl start docker
 sudo systemctl enable docker
