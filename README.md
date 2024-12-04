@@ -469,7 +469,7 @@ On Docker Host:
 ```sh
 sudo su -
 
-useradd ansadmin
+adduser ansadmin
 passwd ansadmin
 visudo
 ```
