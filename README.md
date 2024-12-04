@@ -411,7 +411,7 @@ Security Group: DevOps-Security-Group
 ```sh
 sudo su -
 
-useradd ansadmin
+adduser ansadmin
 passwd ansadmin
 ```
 - Add below line to `/etc/sudoers`s file. to open file in edit mode enter `visudo`.
