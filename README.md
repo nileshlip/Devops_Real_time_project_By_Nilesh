@@ -575,10 +575,10 @@ sudo systemctl status docker
 ```
 - Modify context.xml to Allow Remote Access ,Create (context.xml) file on Ansible In /opt/docker/  
   ```sh
-  <Context antiResourceLocking="false" privileged="true">
-  <!-- Disable remote access restriction -->
-  <Valve className="org.apache.catalina.valves.RemoteAddrValve"
-         allow="^.*$" />
+ <Context antiResourceLocking="false" privileged="true">
+    <!-- Allow access from any IP address -->
+    <Valve className="org.apache.catalina.valves.RemoteAddrValve"
+           allow=".*" />
 </Context>
 ```
 
