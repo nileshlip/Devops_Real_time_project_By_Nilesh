@@ -581,6 +581,7 @@ sudo systemctl status docker
            allow=".*" />
 </Context>
 ```
+
 - We will create same Dockerfile under `docker` directory in Ansible host,you can create image and run container from this image in `ansible` server.
 ```sh
 FROM tomcat:latest
@@ -589,6 +590,7 @@ COPY ./*.war /usr/local/tomcat/webapps
 COPY tomcat-users.xml /usr/local/tomcat/conf/
 COPY context.xml /usr/local/tomcat/webapps/manager/META-INF/
 ```
+
 - try to build image for test purpose
 ```sh
 docker build -t regapp:v1 .
