@@ -50,7 +50,7 @@ sudo yum install git
 - Now we can run our Second job to check `Github integration` is working as expected. Create another FreeStyleJob as below:
 ```sh
 SCM: Git
-URL: https://github.com/nileshlip/hello-world-Projects.git
+URL: https://github.com/nileshl98/real-time-project.git
 Save -> Build Now
 ```
 
@@ -88,7 +88,7 @@ export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$PATH
 ```sh
 Name = FirstMavenProject
 Type: Maven Project
-URL: https://github.com/nileshlip/hello-world-Projects.git
+URL: https://github.com/nileshl98/real-time-project.git
 Root Pom: pom.xml
 Goals and options: clean install
 Save -> Build Now
@@ -343,7 +343,7 @@ provide password
 ```sh
 Name: BuildAndDeployOnContainer
 Type: Maven Project
-SCM: https://github.com/nileshlip/hello-world-Projects.git
+SCM: https://github.com/nileshl98/real-time-project.git
 POLL SCM: * * * * *
 Build Goals: clean install
 Post build actions: Send build artifacts over ssh
