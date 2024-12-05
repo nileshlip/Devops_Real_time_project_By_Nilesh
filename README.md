@@ -295,7 +295,7 @@ docker run -d --name tomcat-container-fixed -p 8085:8080 tomcat-fixed
 - We will create a new user/password called `dockeradmin` and add it to `docker` group
 
 ```sh
-useradd dockeradmin
+adduser dockeradmin
 passwd dockeradmin
 usermod -aG docker dockeradmin
 ```
@@ -470,6 +470,8 @@ sudo su -
 
 adduser ansadmin
 passwd ansadmin
+usermod -aG docker ansadmin
+sudo reboot
 visudo
 ```
 - Add `ansadmin` to `sudoers` file
