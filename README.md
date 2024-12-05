@@ -575,14 +575,12 @@ sudo systemctl status docker
 ```
 - Modify context.xml to Allow Remote Access ,Create (context.xml) file on Ansible In /opt/docker/  
   ```sh
-<Context antiResourceLocking="false" privileged="true">
+  <Context antiResourceLocking="false" privileged="true">
     <!-- Allow access from any IP address -->
     <Valve className="org.apache.catalina.valves.RemoteAddrValve"
            allow=".*" />
 </Context>
-
 ```
-
 - We will create same Dockerfile under `docker` directory in Ansible host,you can create image and run container from this image in `ansible` server.
 ```sh
 FROM tomcat:latest
