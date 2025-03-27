@@ -734,15 +734,17 @@ ansible-playbook /opt/docker/regapp-deploy.yml
 - Latest version of AWS CLI: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 - kubectl latest version:
 
-sudo wget  https://amazon-eks.s3.us-west-2.amazonaws.com/1.21.2/2021-07-05/bin/linux/amd64/kubectl               
-sudo chmod +x ./kubectl
-sudo mv ./kubectl /usr/local/bin/kubectl
+curl -LO "https://dl.k8s.io/release/v1.32.3/bin/linux/amd64/kubectl"
+chmod +x kubectl
+sudo mv kubectl /usr/local/bin/
 
 - eksctl latest version: https://docs.aws.amazon.com/eks/latest/userguide/eksctl.html
 
-sudo wget https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_linux_amd64.tar.gz
-sudo tar -xvf eksctl_linux_amd64.tar.gz
-sudo mv eksctl /usr/local/bin
+curl -LO "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_Linux_amd64.tar.gz"
+tar -xzf eksctl_Linux_amd64.tar.gz
+sudo mv eksctl /usr/local/bin/
+rm eksctl_Linux_amd64.tar.gz
+
 -------------
 verify installation
 kubectl version --short --client
